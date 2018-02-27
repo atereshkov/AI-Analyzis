@@ -25,7 +25,7 @@ public class Main {
         float[][] healthyMatrix = fileReader.getIndicatorsValues(fileName, healthySheet, indicatorsNumber);
         float[][] sickMatrix = fileReader.getIndicatorsValues(fileName, sickSheet, indicatorsNumber);
         float[][] jointMatrix = featureSelection.concatMatrixByColumns(healthyMatrix, sickMatrix);
-        float[][] normalizedMatrix = featureSelection.matrixNormalization(jointMatrix);
+        float[][] normalizedMatrix = featureSelection.normalize(jointMatrix);
         float[][] healthyNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, healthyPeopleNumber, 0, 26);
         float[][] sickNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, sickPeopleNumber, 26, 54);
 
@@ -35,10 +35,9 @@ public class Main {
             То есть значение 0.2 говорит о том, что этот признак информативнее, чем признак со значением 0.6.
         */
         Float[] coeffs = featureSelection.getCompactnessCoefficients(healthyNormalizedMatrix, sickNormalizedMatrix, indicatorsNumber);
-        // Текстовый список признаков
         List<String> features = fileReader.getIndicators(fileName, indicatorsSheet, indicatorsNumber);
 
-        Map<String, Float> unsortedMap = featureSelection.convertToHashMap(features, coeffs);
+        Map<String, Float> unsortedMap = featureSelection.toHashMap(features, coeffs);
 
         Map<String, Float> sortedMap = unsortedMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
