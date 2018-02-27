@@ -44,8 +44,20 @@ public class Main {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new));
 
+        System.out.println("RESULTS:");
+
         for (Map.Entry<String, Float> entry : sortedMap.entrySet()) {
             System.out.println(entry.getKey() + ": "+ entry.getValue());
         }
     }
+
+    void print(float[][] matrix) {
+        for (float[] row : matrix) {
+            for (float el : row) {
+                System.out.print(el + " ");
+            }
+            System.out.println();
+        }
+    }
+
 }

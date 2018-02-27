@@ -28,7 +28,7 @@ public class FeatureSelection {
         return newMatrix;
     }
 
-    float[][] matrixNormalization(float[][] matrix) {
+    float[][] normalize(float[][] matrix) {
         int rows = matrix.length;
         int columns = matrix[0].length;
         float[][] newMatrix = new float[rows][columns];
@@ -59,7 +59,7 @@ public class FeatureSelection {
         return newMatrix;
     }
 
-    Map<String, Float> convertToHashMap(List<String> indicators, Float[] coeffs) {
+    Map<String, Float> toHashMap(List<String> indicators, Float[] coeffs) {
         Map<String, Float> map = new HashMap<>();
 
         for (int i = 0; i < indicators.size(); i++) {
