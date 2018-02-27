@@ -1,6 +1,8 @@
 import IO.FileReaderI;
 import IO.FileReaderImpl;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,6 +31,13 @@ public class Main {
         float[][] healthyNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, healthyPeopleNumber, 0, 26);
         float[][] sickNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, sickPeopleNumber, 26, 54);
 
+        System.out.println("Здоровые (норм.)");
+        print(healthyNormalizedMatrix, true);
+
+        System.out.println("");
+        System.out.println("Больные (норм.)");
+        print(sickNormalizedMatrix, true);
+
         /*
             Коэффициенты близости. Данная величина показывает степень совпадения значений одного класса с другим.
             Чем меньше значения, тем информативнее признак.
@@ -44,17 +53,25 @@ public class Main {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new));
 
-        System.out.println("RESULTS:");
+        System.out.println("");
+        System.out.println("Результаты (информативные признаки, %):");
 
         for (Map.Entry<String, Float> entry : sortedMap.entrySet()) {
-            System.out.println(entry.getKey() + ": "+ entry.getValue());
+            String key = entry.getKey();
+            Float value = (1 - entry.getValue()) * 100;
+            System.out.println(key + ": " + value + "%");
         }
     }
 
-    void print(float[][] matrix) {
+    static void print(float[][] matrix, Boolean format) {
+        DecimalFormat df = new DecimalFormat("#0.00");
         for (float[] row : matrix) {
-            for (float el : row) {
-                System.out.print(el + " ");
+            for (float item : row) {
+                if (format) {
+                    System.out.print(df.format(item) + " ");
+                } else {
+                    System.out.print(item + " ");
+                }
             }
             System.out.println();
         }
