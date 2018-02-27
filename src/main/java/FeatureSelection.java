@@ -10,10 +10,10 @@ public class FeatureSelection {
         Float[] coeffs = new Float[indicators.size()];
 
         for (int i = 0; i < indicators.size(); i++) {
-            float healthyMax = getMaxValue(healthyMatrix[i]);
-            float sickMin = getMinValue(sickMatrix[i]);
+            float healthyMax = MatrixHelper.getMaxValue(healthyMatrix[i]);
+            float sickMin = MatrixHelper.getMinValue(sickMatrix[i]);
             coeffs[i] = healthyMax - sickMin;
-            System.out.println("For " + indicators.get(i) + " = " + (healthyMax - sickMin));
+            System.out.println(indicators.get(i) + "(" + healthyMax + " - " + sickMin + ") = " + (healthyMax - sickMin));
         }
 
         return coeffs;
@@ -36,8 +36,8 @@ public class FeatureSelection {
         float[][] newMatrix = new float[rows][columns];
 
         for (int i = 0; i < rows; i++) {
-            float min = getMinValue(matrix[i]);
-            float max = getMaxValue(matrix[i]);
+            float min = MatrixHelper.getMinValue(matrix[i]);
+            float max = MatrixHelper.getMaxValue(matrix[i]);
             for (int j = 0; j < columns; j++) {
                 // we assume 0 as min value and 1 as max value
                 newMatrix[i][j] = (matrix[i][j] - min) / (max - min);
@@ -70,30 +70,6 @@ public class FeatureSelection {
         }
 
         return map;
-    }
-
-    private float getMinValue(float[] row) {
-        float min = row[0];
-
-        for (float item : row) {
-            if (item < min) {
-                min = item;
-            }
-        }
-
-        return min;
-    }
-
-    private float getMaxValue(float[] row) {
-        float max = row[0];
-
-        for (float item : row) {
-            if (item > max) {
-                max = item;
-            }
-        }
-
-        return max;
     }
 
 }

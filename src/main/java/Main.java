@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static String fileName = "Source.xlsx";
+    private static String fileName2 = "Source2m.xlsx";
     private static String healthySheet = "ЗДОРОВЫЕ";
     private static String sickSheet = "БОЛЬНЫЕ";
     private static String indicatorsSheet = "Признаки";
@@ -33,18 +34,32 @@ public class Main {
 
         List<String> indicators = fileReader.getIndicators(fileName, indicatorsSheet, indicatorsCount);
 
+        System.out.println("Здоровые");
+        print(healthyMatrix, true, indicators, true);
+
+        System.out.println("");
+        System.out.println("Больные");
+        print(sickMatrix, true, indicators, false);
+
+
+        System.out.println("");
+        System.out.println("======================================================================");
+        System.out.println("");
         System.out.println("Здоровые (норм.)");
-        print(healthyNormalizedMatrix, true, indicators);
+        print(healthyNormalizedMatrix, true, indicators, true);
 
         System.out.println("");
         System.out.println("Больные (норм.)");
-        print(sickNormalizedMatrix, true, indicators);
+        print(sickNormalizedMatrix, true, indicators, false);
 
         /*
-            Коэффициенты близости. Данная величина показывает степень "существенного" различия в рассматриваемых выборках (признаках).
-            Чем меньше значения, тем информативнее признак.
+            Коэффициенты близости - разница между наибольшим здоровым и наименьшим больным.
+            Данная величина показывает степень "существенного" различия в рассматриваемых выборках (признаках).
+            Чем меньше значение, тем информативнее признак.
             То есть значение 0.2 говорит о том, что этот признак информативнее, чем признак со значением 0.6.
         */
+        System.out.println("");
+        System.out.println("Коэффициенты:");
         Float[] coefficients = featureSelection.getDistanceCoefficients(healthyNormalizedMatrix, sickNormalizedMatrix, indicators);
 
         Map<String, Float> unsortedMap = featureSelection.toHashMap(indicators, coefficients);
@@ -65,7 +80,7 @@ public class Main {
         }
     }
 
-    static void print(float[][] matrix, Boolean format, List<String> indicators) {
+    static void print(float[][] matrix, Boolean format, List<String> indicators, Boolean health) {
         DecimalFormat df = new DecimalFormat("#0.00");
         Integer i = 0;
         for (float[] row : matrix) {
@@ -76,6 +91,11 @@ public class Main {
                 } else {
                     System.out.print(item + " ");
                 }
+            }
+            if (health) {
+                System.out.print(" (max: " + MatrixHelper.getMaxValue(row)  + ")");
+            } else {
+                System.out.print(" (min: " + MatrixHelper.getMinValue(row)  + ")");
             }
             System.out.println();
             i++;
