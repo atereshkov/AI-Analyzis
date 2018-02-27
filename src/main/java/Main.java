@@ -23,7 +23,7 @@ public class Main {
 
     public static void main(String[] args) {
         FileReaderI fileReader = new FileReaderImpl();
-        FeatureSelection featureSelection = new FeatureSelection();
+        IndicatorProcessor featureSelection = new IndicatorProcessor();
 
         float[][] healthyMatrix = fileReader.getIndicatorsValues(fileName, healthySheet, indicatorsCount);
         float[][] sickMatrix = fileReader.getIndicatorsValues(fileName, sickSheet, indicatorsCount);
@@ -60,7 +60,7 @@ public class Main {
         */
         System.out.println("");
         System.out.println("Коэффициенты:");
-        Float[] coefficients = featureSelection.getDistanceCoefficients(healthyNormalizedMatrix, sickNormalizedMatrix, indicators);
+        Float[] coefficients = featureSelection.getDistance(healthyNormalizedMatrix, sickNormalizedMatrix, indicators, healthyMatrix, sickMatrix);
 
         Map<String, Float> unsortedMap = featureSelection.toHashMap(indicators, coefficients);
         Map<String, Float> sortedMap = unsortedMap.entrySet().stream()

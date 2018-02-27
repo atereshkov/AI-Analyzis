@@ -3,17 +3,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FeatureSelection {
+public class IndicatorProcessor {
 
     /// Compare matrixes by rows and min/max values
-    Float[] getDistanceCoefficients(float[][] healthyMatrix, float[][] sickMatrix, List<String> indicators) {
+    Float[] getDistance(float[][] healthyMatrix, float[][] sickMatrix, List<String> indicators, float[][] healthyMatrixFull, float[][]sickMatrixFull) {
         Float[] coeffs = new Float[indicators.size()];
 
         for (int i = 0; i < indicators.size(); i++) {
             float healthyMax = MatrixHelper.getMaxValue(healthyMatrix[i]);
             float sickMin = MatrixHelper.getMinValue(sickMatrix[i]);
             coeffs[i] = healthyMax - sickMin;
-            System.out.println(indicators.get(i) + "(" + healthyMax + " - " + sickMin + ") = " + (healthyMax - sickMin));
+
+            float healthyFullMax = MatrixHelper.getMaxValue(healthyMatrixFull[i]);
+            float sickFullMin = MatrixHelper.getMinValue(sickMatrixFull[i]);
+            System.out.println(indicators.get(i) + ": (" + healthyFullMax + " - " + sickFullMin + " | "
+                    + healthyMax + " - " + sickMin + ") = " + (healthyMax - sickMin));
         }
 
         return coeffs;
