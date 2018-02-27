@@ -45,7 +45,7 @@ public class Main {
             Чем меньше значения, тем информативнее признак.
             То есть значение 0.2 говорит о том, что этот признак информативнее, чем признак со значением 0.6.
         */
-        Float[] coefficients = featureSelection.getDistanceCoefficients(healthyNormalizedMatrix, sickNormalizedMatrix, indicatorsCount);
+        Float[] coefficients = featureSelection.getDistanceCoefficients(healthyNormalizedMatrix, sickNormalizedMatrix, indicators);
 
         Map<String, Float> unsortedMap = featureSelection.toHashMap(indicators, coefficients);
         Map<String, Float> sortedMap = unsortedMap.entrySet().stream()
@@ -56,10 +56,12 @@ public class Main {
         System.out.println("");
         System.out.println("Результаты (информативные признаки, %):");
 
+        DecimalFormat df = new DecimalFormat("#0.000");
+        DecimalFormat df2 = new DecimalFormat("#0.0");
         for (Map.Entry<String, Float> entry : sortedMap.entrySet()) {
             String key = entry.getKey();
             Float value = (1 - entry.getValue()) * 100;
-            System.out.println(key + ": " + value + "%");
+            System.out.println(key + ": " + df2.format(value) + "% (" + df.format(entry.getValue()) + ")");
         }
     }
 
