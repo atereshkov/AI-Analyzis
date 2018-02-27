@@ -39,14 +39,14 @@ public class Main {
         print(sickNormalizedMatrix, true);
 
         /*
-            Коэффициенты близости. Данная величина показывает степень совпадения значений одного класса с другим.
+            Коэффициенты близости. Данная величина показывает степень "существенного" различия в рассматриваемых выборках (признаках).
             Чем меньше значения, тем информативнее признак.
             То есть значение 0.2 говорит о том, что этот признак информативнее, чем признак со значением 0.6.
         */
-        Float[] coeffs = featureSelection.getCompactnessCoefficients(healthyNormalizedMatrix, sickNormalizedMatrix, indicatorsNumber);
+        Float[] coefficients = featureSelection.getCompactnessCoefficients(healthyNormalizedMatrix, sickNormalizedMatrix, indicatorsNumber);
         List<String> features = fileReader.getIndicators(fileName, indicatorsSheet, indicatorsNumber);
 
-        Map<String, Float> unsortedMap = featureSelection.toHashMap(features, coeffs);
+        Map<String, Float> unsortedMap = featureSelection.toHashMap(features, coefficients);
 
         Map<String, Float> sortedMap = unsortedMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))

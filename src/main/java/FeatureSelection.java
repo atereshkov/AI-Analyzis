@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class FeatureSelection {
 
+    /// Compare matrixes by rows and min/max values
     Float[] getCompactnessCoefficients(float[][] healthyMatrix, float[][] sickMatrix, int featuresNumber) {
         Float[] coeffs = new Float[featuresNumber];
 
@@ -73,9 +74,9 @@ public class FeatureSelection {
     private float getMinValue(float[] row) {
         float min = row[0];
 
-        for (float el : row) {
-            if (el < min) {
-                min = el;
+        for (float item : row) {
+            if (item < min) {
+                min = item;
             }
         }
 
@@ -85,9 +86,9 @@ public class FeatureSelection {
     private float getMaxValue(float[] row) {
         float max = row[0];
 
-        for (float el : row) {
-            if (el > max) {
-                max = el;
+        for (float item : row) {
+            if (item > max) {
+                max = item;
             }
         }
 
