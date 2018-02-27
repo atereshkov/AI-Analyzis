@@ -16,38 +16,38 @@ public class Main {
     private static String sickSheet = "БОЛЬНЫЕ";
     private static String indicatorsSheet = "Признаки";
 
-    private static int indicatorsNumber = 14;
-    private static int healthyPeopleNumber = 26;
-    private static int sickPeopleNumber = 28;
+    private static int indicatorsCount = 14;
+    private static int healthyPeopleCount = 26;
+    private static int sickPeopleCount = 28;
 
     public static void main(String[] args) {
         FileReaderI fileReader = new FileReaderImpl();
         FeatureSelection featureSelection = new FeatureSelection();
 
-        float[][] healthyMatrix = fileReader.getIndicatorsValues(fileName, healthySheet, indicatorsNumber);
-        float[][] sickMatrix = fileReader.getIndicatorsValues(fileName, sickSheet, indicatorsNumber);
+        float[][] healthyMatrix = fileReader.getIndicatorsValues(fileName, healthySheet, indicatorsCount);
+        float[][] sickMatrix = fileReader.getIndicatorsValues(fileName, sickSheet, indicatorsCount);
         float[][] jointMatrix = featureSelection.concatMatrixByColumns(healthyMatrix, sickMatrix);
         float[][] normalizedMatrix = featureSelection.normalize(jointMatrix);
-        float[][] healthyNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, healthyPeopleNumber, 0, 26);
-        float[][] sickNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, sickPeopleNumber, 26, 54);
+        float[][] healthyNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, healthyPeopleCount, 0, healthyPeopleCount);
+        float[][] sickNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, sickPeopleCount, healthyPeopleCount, healthyPeopleCount + sickPeopleCount);
+
+        List<String> indicators = fileReader.getIndicators(fileName, indicatorsSheet, indicatorsCount);
 
         System.out.println("Здоровые (норм.)");
-        print(healthyNormalizedMatrix, true);
+        print(healthyNormalizedMatrix, true, indicators);
 
         System.out.println("");
         System.out.println("Больные (норм.)");
-        print(sickNormalizedMatrix, true);
+        print(sickNormalizedMatrix, true, indicators);
 
         /*
             Коэффициенты близости. Данная величина показывает степень "существенного" различия в рассматриваемых выборках (признаках).
             Чем меньше значения, тем информативнее признак.
             То есть значение 0.2 говорит о том, что этот признак информативнее, чем признак со значением 0.6.
         */
-        Float[] coefficients = featureSelection.getCompactnessCoefficients(healthyNormalizedMatrix, sickNormalizedMatrix, indicatorsNumber);
-        List<String> features = fileReader.getIndicators(fileName, indicatorsSheet, indicatorsNumber);
+        Float[] coefficients = featureSelection.getDistanceCoefficients(healthyNormalizedMatrix, sickNormalizedMatrix, indicatorsCount);
 
-        Map<String, Float> unsortedMap = featureSelection.toHashMap(features, coefficients);
-
+        Map<String, Float> unsortedMap = featureSelection.toHashMap(indicators, coefficients);
         Map<String, Float> sortedMap = unsortedMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
@@ -63,9 +63,11 @@ public class Main {
         }
     }
 
-    static void print(float[][] matrix, Boolean format) {
+    static void print(float[][] matrix, Boolean format, List<String> indicators) {
         DecimalFormat df = new DecimalFormat("#0.00");
+        Integer i = 0;
         for (float[] row : matrix) {
+            System.out.print(indicators.get(i) + " ");
             for (float item : row) {
                 if (format) {
                     System.out.print(df.format(item) + " ");
@@ -74,6 +76,7 @@ public class Main {
                 }
             }
             System.out.println();
+            i++;
         }
     }
 

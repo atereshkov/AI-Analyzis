@@ -6,10 +6,10 @@ import java.util.Map;
 public class FeatureSelection {
 
     /// Compare matrixes by rows and min/max values
-    Float[] getCompactnessCoefficients(float[][] healthyMatrix, float[][] sickMatrix, int featuresNumber) {
-        Float[] coeffs = new Float[featuresNumber];
+    Float[] getDistanceCoefficients(float[][] healthyMatrix, float[][] sickMatrix, int indicatorsCount) {
+        Float[] coeffs = new Float[indicatorsCount];
 
-        for (int i = 0; i < featuresNumber; i++) {
+        for (int i = 0; i < indicatorsCount; i++) {
             float healthyMax = getMaxValue(healthyMatrix[i]);
             float sickMin = getMinValue(sickMatrix[i]);
             coeffs[i] = healthyMax - sickMin;
