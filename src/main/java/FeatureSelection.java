@@ -39,7 +39,7 @@ public class FeatureSelection {
             float min = MatrixHelper.getMinValue(matrix[i]);
             float max = MatrixHelper.getMaxValue(matrix[i]);
             for (int j = 0; j < columns; j++) {
-                // we assume 0 as min value and 1 as max value
+                // we assume 0 as min value and max-min as max value
                 newMatrix[i][j] = (matrix[i][j] - min) / (max - min);
             }
         }

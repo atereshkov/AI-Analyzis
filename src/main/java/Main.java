@@ -64,19 +64,38 @@ public class Main {
 
         Map<String, Float> unsortedMap = featureSelection.toHashMap(indicators, coefficients);
         Map<String, Float> sortedMap = unsortedMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                //.sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new));
 
-        System.out.println("");
-        System.out.println("Результаты (информативные признаки, %):");
+        printResults(sortedMap);
+    }
 
+    static void printResults(Map<String, Float> map) {
         DecimalFormat df = new DecimalFormat("#0.000");
         DecimalFormat df2 = new DecimalFormat("#0.0");
-        for (Map.Entry<String, Float> entry : sortedMap.entrySet()) {
+
+        System.out.println("");
+        System.out.println("Результаты (наиболее информативные признаки, > 50%):");
+
+        for (Map.Entry<String, Float> entry : map.entrySet()) {
             String key = entry.getKey();
             Float value = (1 - entry.getValue()) * 100;
-            System.out.println(key + ": " + df2.format(value) + "% (" + df.format(entry.getValue()) + ")");
+            if (entry.getValue() < 0.5) {
+                System.out.println(key + ": " + df2.format(value) + "% (" + df.format(entry.getValue()) + ")");
+            }
+        }
+
+        System.out.println("");
+        System.out.println("Результаты (наименее информативные признаки, < 50%):");
+
+        for (Map.Entry<String, Float> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Float value = (1 - entry.getValue()) * 100;
+            if (entry.getValue() > 0.5) {
+                System.out.println(key + ": " + df2.format(value) + "% (" + df.format(entry.getValue()) + ")");
+            }
         }
     }
 
