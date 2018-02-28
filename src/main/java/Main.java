@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static String fileName = "Source.xlsx";
-    private static String fileName2 = "Source2m.xlsx";
+    //private static String fileName = "Source2m.xlsx";
     private static String healthySheet = "ЗДОРОВЫЕ";
     private static String sickSheet = "БОЛЬНЫЕ";
     private static String indicatorsSheet = "Признаки";

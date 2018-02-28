@@ -59,7 +59,7 @@ public class IndicatorProcessor {
         for (int i = 0; i < rows; i++) {
             float min = MatrixHelper.getMinValue(matrix[i]);
             float max = MatrixHelper.getMaxValue(matrix[i]);
-            for(int j = 0; j < rows; j++) {
+            for(int j = 0; j < columns; j++) {
                 newMatrix[i][j] += Math.sqrt(Math.pow(matrix[i][j] - min, 2)) / (max - min);
             }
         }
