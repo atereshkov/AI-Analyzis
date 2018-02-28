@@ -15,7 +15,7 @@ public class ConsoleOutput {
             String key = entry.getKey();
             Float value = (1 - entry.getValue()) * 100;
             if (entry.getValue() < 0.5) {
-                System.out.println(key + ": " + df2.format(value) + "% (" + df.format(entry.getValue()) + ")");
+                System.out.println(key + ": " + df2.format(value) + "% (diff: " + df.format(entry.getValue()) + ")");
             }
         }
 
@@ -26,7 +26,7 @@ public class ConsoleOutput {
             String key = entry.getKey();
             Float value = (1 - entry.getValue()) * 100;
             if (entry.getValue() > 0.5) {
-                System.out.println(key + ": " + df2.format(value) + "% (" + df.format(entry.getValue()) + ")");
+                System.out.println(key + ": " + df2.format(value) + "% (diff: " + df.format(entry.getValue()) + ")");
             }
         }
     }
