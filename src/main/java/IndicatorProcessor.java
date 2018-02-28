@@ -51,6 +51,22 @@ public class IndicatorProcessor {
         return newMatrix;
     }
 
+    float[][] normalizeEuclidean(float[][] matrix) {
+        int rows = matrix.length;
+        int columns = matrix[0].length;
+        float[][] newMatrix = new float[rows][columns];
+
+        for (int i = 0; i < rows; i++) {
+            float min = MatrixHelper.getMinValue(matrix[i]);
+            float max = MatrixHelper.getMaxValue(matrix[i]);
+            for(int j = 0; j < rows; j++) {
+                newMatrix[i][j] += Math.sqrt(Math.pow(matrix[i][j] - min, 2)) / (max - min);
+            }
+        }
+
+        return newMatrix;
+    }
+
     float[][] concatMatrixByColumns(float[][] firstMatrix, float[][] secondMatrix) {
         int newLength = firstMatrix[0].length + secondMatrix[0].length;
         int rowsNumber = firstMatrix.length;

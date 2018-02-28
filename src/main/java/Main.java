@@ -2,6 +2,7 @@ import IO.FileReaderI;
 import IO.FileReaderImpl;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import java.net.Inet4Address;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -22,13 +23,29 @@ public class Main {
     private static int sickPeopleCount = 28;
 
     public static void main(String[] args) {
+        // Mode:
+        // 0 - normal
+        // 1 - Euclidean
+        runAI(0);
+        runAI(1);
+    }
+
+    private static void runAI(Integer mode) {
+        printModeDivider(mode);
+
         FileReaderI fileReader = new FileReaderImpl();
         IndicatorProcessor featureSelection = new IndicatorProcessor();
 
         float[][] healthyMatrix = fileReader.getIndicatorsValues(fileName, healthySheet, indicatorsCount);
         float[][] sickMatrix = fileReader.getIndicatorsValues(fileName, sickSheet, indicatorsCount);
         float[][] jointMatrix = featureSelection.concatMatrixByColumns(healthyMatrix, sickMatrix);
-        float[][] normalizedMatrix = featureSelection.normalize(jointMatrix);
+
+        float[][] normalizedMatrix;
+        if (mode == 0) {
+            normalizedMatrix = featureSelection.normalize(jointMatrix);
+        } else {
+            normalizedMatrix = featureSelection.normalizeEuclidean(jointMatrix);
+        }
         float[][] healthyNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, healthyPeopleCount, 0, healthyPeopleCount);
         float[][] sickNormalizedMatrix = featureSelection.splitMatrix(normalizedMatrix, sickPeopleCount, healthyPeopleCount, healthyPeopleCount + sickPeopleCount);
 
@@ -69,6 +86,17 @@ public class Main {
                         (e1, e2) -> e1, LinkedHashMap::new));
 
         ConsoleOutput.printResults(sortedMap);
+    }
+
+    private static void printModeDivider(Integer mode) {
+        System.out.println();
+        System.out.println("======================================================================================");
+        if (mode == 0) {
+            System.out.println("Mode normal");
+        } else if (mode == 1) {
+            System.out.println("Mode Euclidean");
+        }
+        System.out.println();
     }
 
 }
