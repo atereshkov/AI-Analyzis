@@ -35,22 +35,22 @@ public class Main {
         List<String> indicators = fileReader.getIndicators(fileName, indicatorsSheet, indicatorsCount);
 
         System.out.println("Здоровые");
-        print(healthyMatrix, true, indicators, true);
+        ConsoleOutput.print(healthyMatrix, true, indicators, true);
 
         System.out.println("");
         System.out.println("Больные");
-        print(sickMatrix, true, indicators, false);
+        ConsoleOutput.print(sickMatrix, true, indicators, false);
 
 
         System.out.println("");
         System.out.println("======================================================================");
         System.out.println("");
         System.out.println("Здоровые (норм.)");
-        print(healthyNormalizedMatrix, true, indicators, true);
+        ConsoleOutput.print(healthyNormalizedMatrix, true, indicators, true);
 
         System.out.println("");
         System.out.println("Больные (норм.)");
-        print(sickNormalizedMatrix, true, indicators, false);
+        ConsoleOutput.print(sickNormalizedMatrix, true, indicators, false);
 
         /*
             Коэффициенты близости - разница между наибольшим здоровым и наименьшим больным.
@@ -69,56 +69,7 @@ public class Main {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new));
 
-        printResults(sortedMap);
-    }
-
-    static void printResults(Map<String, Float> map) {
-        DecimalFormat df = new DecimalFormat("#0.000");
-        DecimalFormat df2 = new DecimalFormat("#0.0");
-
-        System.out.println("");
-        System.out.println("Результаты (наиболее информативные признаки, > 50%):");
-
-        for (Map.Entry<String, Float> entry : map.entrySet()) {
-            String key = entry.getKey();
-            Float value = (1 - entry.getValue()) * 100;
-            if (entry.getValue() < 0.5) {
-                System.out.println(key + ": " + df2.format(value) + "% (" + df.format(entry.getValue()) + ")");
-            }
-        }
-
-        System.out.println("");
-        System.out.println("Результаты (наименее информативные признаки, < 50%):");
-
-        for (Map.Entry<String, Float> entry : map.entrySet()) {
-            String key = entry.getKey();
-            Float value = (1 - entry.getValue()) * 100;
-            if (entry.getValue() > 0.5) {
-                System.out.println(key + ": " + df2.format(value) + "% (" + df.format(entry.getValue()) + ")");
-            }
-        }
-    }
-
-    static void print(float[][] matrix, Boolean format, List<String> indicators, Boolean health) {
-        DecimalFormat df = new DecimalFormat("#0.00");
-        Integer i = 0;
-        for (float[] row : matrix) {
-            System.out.print(indicators.get(i) + " ");
-            for (float item : row) {
-                if (format) {
-                    System.out.print(df.format(item) + " ");
-                } else {
-                    System.out.print(item + " ");
-                }
-            }
-            if (health) {
-                System.out.print(" (max: " + MatrixHelper.getMaxValue(row)  + ")");
-            } else {
-                System.out.print(" (min: " + MatrixHelper.getMinValue(row)  + ")");
-            }
-            System.out.println();
-            i++;
-        }
+        ConsoleOutput.printResults(sortedMap);
     }
 
 }
